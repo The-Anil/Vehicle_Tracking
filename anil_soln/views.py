@@ -18,16 +18,18 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 
-# Get a reference to the database service
-db = firebase.database()
 
-all = {}
-a = db.child('/').get()
-for user in a.each():
-    c = user.key()
-    d = user.val()
-    all.update({c:d})
+
+
 
 # Create your views here.
 def index(request):
+    # Get a reference to the database service
+    db = firebase.database()
+    all = {}
+    a = db.child('/').get()
+    for user in a.each():
+        c = user.key()
+        d = user.val()
+        all.update({c: d})
     return render(request, 'anil_soln/index.html', {'dic2': all})
