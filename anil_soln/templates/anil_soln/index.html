@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-COMPATIBLE" content="ie=edge">
+
+    <!-- CardView Styling-->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Vehicle Tracker</title>
+
+    <!-- Map Styling-->
+    <style>
+        #map{
+            height:550px;
+            width:900px;
+        }
+    </style>
+
+    <!-- Side navigation bar Styling-->
+    <style>
+    body {
+        font-family: "Lato", sans-serif;
+    }
+
+    .sidenav {
+        height: 100%;
+        width: 0%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #f1f1f1;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+    .sidenav a:hover {
+        color: #f1f1f1;
+    }
+
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    #main {
+        transition: margin-left .5s;
+        padding: 16px;
+    }
+
+    @media screen and (max-height: 450px) {
+      .sidenav {padding-top: 15px;}
+      .sidenav a {font-size: 18px;}
+    }
+    </style>
+
+</head>
+<body>
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="w3-container">
+          {% with 'vehicle1 vehicle2 vehicle3' as arr %}
+                {% for i in arr.split %}
+                      {% for key,value in dic2.items %}
+                          {% if key == i %}
+                                        <div class="w3-card-4" style="width:100%">
+                                            <div class="w3-container">
+                                             <hr>
+                                      <img src="https://www.w3schools.com/w3css/img_avatar3.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px"><br><br>
+
+                              {% for key1,value1 in value.items %}
+                                           <p>{{key1}} : {{value1}}</p>
+                              {% endfor %}
+                                                    </div>
+                           <button class="w3-button w3-block w3-dark-grey">==================</button>
+                                           </div>
+                           {% endif %}
+                      {% endfor %}
+                {% endfor %}
+          {% endwith %}
+    </div>
+</div>
+
+<script>
+       var lat = []
+       var lng = []
+       var z_status = []
+                {% with 'vehicle1 vehicle2 vehicle3' as arr %}
+                    {% for i in arr.split %}
+                              {% for key,value in dic2.items %}
+                                  {% if key == i %}
+                                      {% for key1,value1 in value.items %}
+                                                   {% if key1 == "lat" %}
+                                                            lat.push({{value1}})
+                                                   {% elif key1 == "lng" %}
+                                                            lng.push({{value1}})
+                                                   {% elif key1 == "z_status" %}
+                                                            z_status.push("{{value1}}")
+                                                   {% endif %}
+                                      {% endfor %}
+                                   {% endif %}
+                              {% endfor %}
+                    {% endfor %}
+                {% endwith %}
+</script>
+<div id="main">
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Vehicle Tracker</span>
+    <div id="map"></div>
+</div>
+
+    <!-- Map Configuration javascript-->
+    <script>
+
+        var arr = [{lat:8.5241,lng:76.9366},{lat:9.5276,lng:76.9420}];
+        var arr1 = [{lat:9.5241,lng:76.9366},{lat:9.5276,lng:76.9420}];
+        var arr1 = [{lat:9.5241,lng:76.9366},{lat:9.5276,lng:76.9420}];
+
+        var coun=0;
+        function initMap(){
+            var options = {
+                zoom:4.7,
+                center: {lat:21.1458,lng:79.0882}
+            }
+            var map = new google.maps.Map(document.getElementById('map'),options);
+
+            for(var i=0; i<3; i++){
+                if(z_status[i] == "running"){
+                    var marker2 = new google.maps.Marker({
+                    position:{lat:lat[i],lng:lng[i]},
+                    map:map,
+                    {% load static %}
+                    icon:'{% static 'anil_soln/green_car.png' %}'
+                });
+                }
+                else if(z_status[i] == "stopped"){
+                    var marker2 = new google.maps.Marker({
+                    position:{lat:lat[i],lng:lng[i]},
+                    map:map,
+                    {% load static %}
+                    icon:'{% static 'anil_soln/red__car.png' %}'
+                });
+                }
+                else if(z_status[i] == "scheduled"){
+                    var marker2 = new google.maps.Marker({
+                    position:{lat:lat[i],lng:lng[i]},
+                    map:map,
+                    {% load static %}
+                    icon:'{% static 'anil_soln/blue_car.png' %}'
+                });
+                }
+            }
+        }
+        var x=setInterval(function(){
+                if(coun<2){
+                    coun++;
+                    initMap();
+
+                }
+                if(coun==2){
+                    coun=0;
+                    initMap();
+                    clearInterval(x);
+                }
+        },10000);
+
+
+
+    </script>
+
+
+    <!-- Google javascript API code-->
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIju5Jzg3R280li-5HIVKL6Gbud6fe5nw&callback=initMap">
+    </script>
+
+    <!-- Side navigation bar javascript-->
+    <script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "400px";
+        document.getElementById("main").style.marginLeft = "400px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft= "0";
+    }
+    </script>
+</body>
+
+</html>
+
+{% endblock %}
