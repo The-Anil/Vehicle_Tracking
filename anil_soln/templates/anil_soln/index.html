@@ -84,10 +84,21 @@
                                       <img src="https://www.w3schools.com/w3css/img_avatar3.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px"><br><br>
 
                               {% for key1,value1 in value.items %}
-                                           <p>{{key1}} : {{value1}}</p>
+                                                {% if key1 == "z_status" %}
+                                                        {% if value1 == "running" %}
+                                                            <p>{{key1}} : {{value1}}  <img src="https://vignette.wikia.nocookie.net/narutofanon/images/6/6a/Icon_green_dot.png/revision/latest?cb=20161029210441" style="width:20px;height:20px"></p>
+                                                        {% elif value1 == "stopped" %}
+                                                            <p>{{key1}} : {{value1}}  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Offline_dot.png/120px-Offline_dot.png" style="width:15px;height:15px"></p>
+                                                        {% elif value1 == "scheduled" %}
+                                                            <p>{{key1}} : {{value1}}  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Blue_dot.png/120px-Blue_dot.png" style="width:15px;height:15px"></p>
+                                                        {% endif %}
+                                                {% else %}
+                                                            <p>{{key1}} : {{value1}}</p>
+                                                {% endif %}
+
                               {% endfor %}
                                                     </div>
-                           <button class="w3-button w3-block w3-dark-grey">==================</button>
+                           <button class="w3-button w3-block w3-dark-grey">Last updated 30 sec before</button>
                                            </div>
                            {% endif %}
                       {% endfor %}
@@ -128,7 +139,7 @@
 
         var arr = [{lat:8.5241,lng:76.9366},{lat:9.5276,lng:76.9420}];
         var arr1 = [{lat:9.5241,lng:76.9366},{lat:9.5276,lng:76.9420}];
-        var arr1 = [{lat:9.5241,lng:76.9366},{lat:9.5276,lng:76.9420}];
+        var arr2 = [{lat:9.5241,lng:76.9366},{lat:9.5276,lng:76.9420}];
 
         var coun=0;
         function initMap(){
@@ -140,13 +151,24 @@
 
             for(var i=0; i<3; i++){
                 if(z_status[i] == "running"){
-                    var marker2 = new google.maps.Marker({
+                    var marker = new google.maps.Marker({
                     position:{lat:lat[i],lng:lng[i]},
                     map:map,
                     {% load static %}
                     icon:'{% static 'anil_soln/green_car.png' %}'
                 });
+
+
+                var infoWindow = new google.maps.InfoWindow({
+                    content: 'window3'
+                });
+
+                marker.addListener('click',function(){
+                    infoWindow.open(map, marker);
+                });
+
                 }
+
                 else if(z_status[i] == "stopped"){
                     var marker2 = new google.maps.Marker({
                     position:{lat:lat[i],lng:lng[i]},
@@ -154,13 +176,27 @@
                     {% load static %}
                     icon:'{% static 'anil_soln/red__car.png' %}'
                 });
+                var infoWindow = new google.maps.InfoWindow({
+                    content: 'Window1'
+                });
+
+                marker2.addListener('click',function(){
+                    infoWindow.open(map, marker2);
+                });
                 }
                 else if(z_status[i] == "scheduled"){
-                    var marker2 = new google.maps.Marker({
+                    var marker3 = new google.maps.Marker({
                     position:{lat:lat[i],lng:lng[i]},
                     map:map,
                     {% load static %}
                     icon:'{% static 'anil_soln/blue_car.png' %}'
+                });
+                var infoWindow = new google.maps.InfoWindow({
+                    content: 'Window2'
+                });
+
+                marker3.addListener('click',function(){
+                    infoWindow.open(map, marker3);
                 });
                 }
             }
@@ -176,7 +212,7 @@
                     initMap();
                     clearInterval(x);
                 }
-        },30000);
+        },10000);
 
 
 
