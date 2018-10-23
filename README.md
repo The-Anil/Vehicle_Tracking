@@ -2,7 +2,7 @@
 
 <h3>Click to see Live Implementation: ☛ http://159.89.165.35/anil_soln/ </h3><br>
 
-Live Vehicle tracking using Google Maps Javascipt  API, Django, Pyhton, Firebase.
+Live Vehicle tracking using Google Maps Javascipt  API, Django, Python, Firebase.
 
 Tools and API used:
 
